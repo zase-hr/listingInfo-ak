@@ -23,6 +23,14 @@ app.get('/listings/:id', (req, res) => {
   });
 });
 
+// app.put('/listings/:id', (req, res) => {
+//   // db.findOne(byid)
+//   // for (var prop in req.body) {
+//   //    foundOne[prop] = req.body[prop];
+//   // }
+//   // push
+// });
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 module.exports = app;
