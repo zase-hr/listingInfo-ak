@@ -13,22 +13,71 @@ app.use(express.static(`${__dirname}/../client/dist`));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
 app.get('/listings/:id', (req, res) => {
   db.findOne({ id: req.params.id }).exec((err, docs) => {
     if (err) {
       res.status(500).send();
-    } else {console.log(docs);
+    } else {
       res.status(200).send(docs);
     }
   });
 });
 
-// app.put('/listings/:id', (req, res) => {
-//   // db.findOne(byid)
-//   // for (var prop in req.body) {
-//   //    foundOne[prop] = req.body[prop];
-//   // }
-//   // push
+// app.get('/listings', (req, res) => {
+//   db.listings.findAll().exec((err, docs) => {
+//     if (err) {
+//       res.status(500).send();
+//     } else {
+//       console.log('hi, I get all listings information objects');
+//       res.status(200).send(docs);
+//     }
+//   });
+// });
+
+// app.get('/listing/:id', (req, res) => {
+//   console.log('hi I am GET');
+//   db.find({ id: req.params.id }).exec((err, docs) => {
+//     if (err) {
+//       res.status(500).send();
+//     } else {
+//       console.log('hi, I get one listing information object');
+//       res.status(200).send(docs);
+//     }
+//   });
+// });
+
+// app.put('/listing/:id', (req, res) => {
+//   db.listings.findByIdAndUpdate()({ id: req.params.id }, { id: req.params.id }).exec((err, docs) => {
+//     if (err) {
+//       res.status(500).send();
+//     } else {
+//       console.log('hi, I update one listing information object');
+//       res.status(200).send(docs);
+//     }
+//   });
+// });
+
+// app.post('/listing', (req, res) => {
+//   db.listings.create({ id: req.body.id }).exec((err, docs) => {
+//     if (err) {
+//       res.status(500).send();
+//     } else {
+//       console.log('hi, I get one listing information');
+//       res.status(200).send(docs);
+//     }
+//   });
+// });
+
+// app.delete('/listing/:id', (req, res) => {
+//   db.listings.findByIdAndRemove({ id: req.params.id }).exec((err, docs) => {
+//     if (err) {
+//       res.status(500).send();
+//     } else {
+//       console.log('hi, I remove one listing information');
+//       res.status(200).send(docs);
+//     }
+//   });
 // });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
