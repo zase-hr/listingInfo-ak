@@ -1,5 +1,5 @@
 CREATE KEYSPACE "airbnb"
-WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
 
 USE airbnb;
 
@@ -25,4 +25,4 @@ CREATE TABLE listing (
   sleepingArrangements MAP<TEXT, TEXT>
 );
 
-COPY listing(id,city,title,hostImage,roomInfo,numberOfGuests,numberOfBedrooms,numberOfBeds,numberOfBaths,isSuperhost,isGreatLocation,isSparklingClean,isGreatCheckIn,isSelfCheckIn,description,amenities_basic,amenities_dining,amenities_bedAndBath,sleepingArrangements) FROM './listing.csv' with delimiter = ';';
+COPY listing(id,city,title,hostImage,roomInfo,numberOfGuests,numberOfBedrooms,numberOfBeds,numberOfBaths,isSuperhost,isGreatLocation,isSparklingClean,isGreatCheckIn,isSelfCheckIn,description,amenities_basic,amenities_dining,amenities_bedAndBath,sleepingArrangements) FROM './listing.csv' with delimiter = ';' and HEADER = true;

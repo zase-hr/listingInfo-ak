@@ -8,6 +8,9 @@ const writer = csvWriter({
 });
 writer.pipe(fs.createWriteStream('listing.csv'));
 
+
+const hrstart = process.hrtime();
+
 // we need to stringify array and objects, using single quote
 function singleQuoteStringify(obj) {
   return JSON.stringify(obj).replace(/"/g, "'");
@@ -16,7 +19,7 @@ function singleQuoteStringify(obj) {
 // ~~~~~~~~~~~~~~~~~ Random Generators ~~~~~~~~~~~~~~~~~~~
 
 
-const N = 100000;
+const N = 1000 * 1000; //10 * 1000 * 1000;
 
 function randomSubArray(arr) {
   return arr.filter(faker.random.boolean);
@@ -32,7 +35,7 @@ function randomSleepingArrangements() {
 }
 
 for (let i = 0; i < N; i++) {
-  if (i % 1000 === 0) {
+  if (i % 10000 === 0) {
     console.log(`... creating record #${i}`);
   }
   const listingObject = {
@@ -50,10 +53,10 @@ for (let i = 0; i < N; i++) {
     isSparklingClean: faker.random.boolean(),
     isGreatCheckIn: faker.random.boolean(),
     isSelfCheckIn: faker.random.boolean(),
-    description: faker.lorem.words(5 + faker.random.number(35)),
-    amenities_basic: singleQuoteStringify(randomSubArray(['wifi', 'laptop area', 'iron', 'toilet papers', 'chargin station', 'tv', 'radio', 'fan', 'heater'])),
-    amenities_dining: singleQuoteStringify(randomSubArray(['kithcen', 'utensil', 'pans', 'pots', 'skillets', 'coffee maker', 'tea maker', 'strainer', 'cups', 'teapot'])),
-    amenities_bedAndBath: singleQuoteStringify(randomSubArray(['shampoo', 'hair dryer', 'hanger', 'body wash', 'towel', 'pillow', 'sheets', 'blanket', 'tooth brush', 'toothpaste'])),
+    description: faker.lorem.words(5 + faker.random.number(10)),
+    amenities_basic: singleQuoteStringify(randomSubArray(['wifi', 'laptop area', 'iron', 'toilet papers', 'chargin station', 'tv', 'radio'])),
+    amenities_dining: singleQuoteStringify(randomSubArray(['kithcen', 'utensil', 'pans', 'pots', 'skillets', 'coffee maker', 'tea maker'])),
+    amenities_bedAndBath: singleQuoteStringify(randomSubArray(['shampoo', 'hair dryer', 'hanger', 'body wash', 'towel', 'pillow', 'sheets'])),
     sleepingArrangements: singleQuoteStringify(randomSleepingArrangements()),
   };
   writer.write(listingObject);
@@ -61,3 +64,7 @@ for (let i = 0; i < N; i++) {
 
 writer.end();
 console.log(`Done ${N} records added!`);
+
+const hrend = process.hrtime(hrstart);
+console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
+
