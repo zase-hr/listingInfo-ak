@@ -8,6 +8,7 @@ const writer = csvWriter({
 });
 writer.pipe(fs.createWriteStream('listing.csv'));
 
+let drainsCount = 0;
 
 const hrstart = process.hrtime();
 
@@ -34,10 +35,18 @@ function randomSleepingArrangements() {
   return obj;
 }
 
-for (let i = 0; i < N; i++) {
-  if (i % 10000 === 0) {
-    console.log(`... creating record #${i}`);
+function generateRow(i) {
+  if (i === N || i % 10000 === 0) {
+    const hrend = process.hrtime(hrstart);
+    console.info('... creating record #%d -- Execution time (hr): %ds %dms', i, hrend[0], hrend[1] / 1000000);
   }
+
+  if (i === N) {
+    console.log(`Done ${N} records added!`);
+    writer.end();
+    return;
+  }
+
   const listingObject = {
     id: (i + 1),
     city: faker.address.city(),
@@ -59,12 +68,20 @@ for (let i = 0; i < N; i++) {
     amenities_bedAndBath: singleQuoteStringify(randomSubArray(['shampoo', 'hair dryer', 'hanger', 'body wash', 'towel', 'pillow', 'sheets'])),
     sleepingArrangements: singleQuoteStringify(randomSleepingArrangements()),
   };
-  writer.write(listingObject);
+
+
+  if (writer.write(listingObject)) {
+    generateRow(i + 1);
+  } else {
+    //console.log('write failed...');
+    ++drainsCount;
+    writer.once('drain', () => {
+      if (drainsCount % 10000 === 0) {
+        console.log('draining for the ' + drainsCount + ' time!');
+      }
+      generateRow(i + 1);
+    });
+  }
 }
 
-writer.end();
-console.log(`Done ${N} records added!`);
-
-const hrend = process.hrtime(hrstart);
-console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
-
+generateRow(0);
