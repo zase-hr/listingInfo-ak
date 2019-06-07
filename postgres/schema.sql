@@ -1,15 +1,14 @@
 
-DROP SCHEMA airbnb_listing CASCADE;
-CREATE SCHEMA airbnb_listing;
-USE airbnb_listing
+DROP SCHEMA airbnb CASCADE;
+CREATE SCHEMA airbnb;
+USE airbnb
 
 /* ~~~~~~~~~~~~~~~~~~~ review_author ~~~~~~~~~~~~~~~~~~~~ */
 
-CREATE TABLE airbnb_house (
-    house_id INT NOT NULL,
+CREATE TABLE listing (
+    listing_id INT NOT NULL,
     numberOfBedrooms INT NOT NULL,
     picture_url VARCHAR(255) NOT NULL,
-    PRIMARY KEY (house_id),
     city TEXT NOT NULL,
     title TEXT NOT NULL,
     hostImage TEXT NOT NULL,
@@ -17,20 +16,27 @@ CREATE TABLE airbnb_house (
     numberOfGuests INT NOT NULL,
     numberOfBeds INT NOT NULL,
     numberOfBaths INT NOT NULL,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    PRIMARY KEY (house_id)
 );
 
--- CREATE TABLE amenities (
---     isSuperhost BOOLEAN NOT NULL,
---     isGreatLocation NOT NULL,
---     isSparklingClean NOT NULL,
---     isGreatCheckIn NOT NULL,
---     isSelfCheckIn NOT NULL,
--- );
+CREATE TABLE amenities_basic (
+    house_id INT NOT NULL REFERENCES listing(listing_id),
+    item_name VARCHAR(50)
+);
 
--- CREATE TABLE ... (
---     amenities_basic LIST<TEXT>,
---     amenities_dining LIST<TEXT>,
---     amenities_bedAndBath LIST<TEXT>,
---     sleepingArrangements MAP<TEXT, TEXT>
--- );
+CREATE TABLE amenities_dining (
+    house_id INT NOT NULL REFERENCES listing(listing_id),
+    item_name VARCHAR(50)
+);
+
+CREATE TABLE amenities_bedandbath (
+    house_id INT NOT NULL REFERENCES listing(listing_id),
+    item_name VARCHAR(50)
+);
+
+CREATE TABLE sleeping_arrangements (
+    house_id INT NOT NULL REFERENCES listing(listing_id),
+    room_type VARCHAR(50),
+    room_beds VARCHAR(50)
+);

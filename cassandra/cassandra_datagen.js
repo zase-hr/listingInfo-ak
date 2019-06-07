@@ -19,7 +19,7 @@ function singleQuoteStringify(obj) {
 // ~~~~~~~~~~~~~~~~~ Random Generators ~~~~~~~~~~~~~~~~~~~
 
 
-const N = 1000 * 1000; //10 * 1000 * 1000;
+const N = 10 * 1000 * 1000;
 
 function randomSubArray(arr) {
   return arr.filter(faker.random.boolean);
