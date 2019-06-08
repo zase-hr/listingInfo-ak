@@ -30,7 +30,8 @@ function randomSleepingArrangements() {
   const obj = {};
   const size = 1 + faker.random.number(4);
   for (let i = 0; i < size; i++) {
-    obj[`${faker.random.arrayElement(['Bedroom', 'Space', 'Room'])} ${i + 1}`] = `${faker.random.arrayElement(['Twin', 'Queen', 'King', 'Double', 'Sofa'])} bed`;
+    obj[`${faker.random.arrayElement(['Bedroom', 'Space', 'Room'])} ${i + 1}`] 
+    = `${faker.random.arrayElement(['Twin', 'Queen', 'King', 'Double', 'Sofa'])} bed`;
   }
   return obj;
 }
