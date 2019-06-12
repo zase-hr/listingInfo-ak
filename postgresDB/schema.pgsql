@@ -25,10 +25,12 @@ CREATE TABLE airbnb.listings (
 );
 
 CREATE TABLE airbnb.listing_sleepings (
-    listing_id INT NOT NULL REFERENCES airbnb.listings(listing_id),
+    listing_id INT NOT NULL REFERENCES airbnb.listings(listing_id) on delete cascade,
     room_type VARCHAR(50),
     room_beds VARCHAR(50)
 );
+CREATE INDEX listing_sleepings_index ON listing_sleepings (listing_id);
+
 
 -- order matters here as we have foreign keys --
 
@@ -46,9 +48,12 @@ CREATE TABLE airbnb.items ( -- manually inserted in schema file
 );
 
 CREATE TABLE airbnb.listing_items (
-    listing_id INT NOT NULL REFERENCES airbnb.listings(listing_id),
+    listing_id INT NOT NULL REFERENCES airbnb.listings(listing_id) on delete cascade,
     item_id INT NOT NULL REFERENCES airbnb.items(item_id)
 );
+CREATE INDEX listing_items_index ON listing_items (listing_id);
+
+-- https://stackoverflow.com/questions/19145761/postgres-for-loop
 
 /* ~~~~~~~~~~~~~~~~~~~~~ CONSTANT VALUES ~~~~~~~~~~~~~~~~~~~~~~~~ */
 INSERT INTO airbnb.itemgroups 
