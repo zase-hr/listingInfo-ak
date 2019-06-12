@@ -3,9 +3,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const db = require('../database MongoDB/index.js');
+const db = require('../postgresDB/controller.js');
 
-const port = 3002;
+
+const port = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.static(`${__dirname}/../client/dist`));
@@ -13,15 +14,33 @@ app.use(express.static(`${__dirname}/../client/dist`));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get('/test1', (req, res) => {
+  res.status(200).send('hiiii');
+});
 
-app.get('/listing/:id', (req, res) => {
-  db.getListingItem((err, data) => {
+app.get('/testtime', (req, res) => {
+  db.getTime((err, data) => {
+    console.log({err, data});
     if (err) {
       res.status(500);
       res.send(err);
     } else {
       res.status(200);
-      res.send(data[0]);
+      res.send(data);
+    }
+  });
+});
+
+
+app.get('/listing', (req, res) => {
+  db.getListing((err, data) => {
+    console.log({ x: data });
+    if (err) {
+      res.status(500);
+      res.send(err);
+    } else {
+      res.status(200);
+      res.send(data.rows);
     }
   });
 });

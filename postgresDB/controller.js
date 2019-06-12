@@ -1,76 +1,59 @@
-const connection = require('./index.js');
 
-// eslint-disable-next-line func-names
-const getListingItem = function (cb) {
-  connection.query(`SELECT 
-     airbnb.listings.listing_id as listing_id,
-     airbnb.listings.city as city,
-     airbnb.listings.title as title,
-     airbnb.listings.hostImage as hostImage,
-     airbnb.listings.roomInfo as roomInfo,
-     airbnb.listings.numberOfGuests as numberOfGuests,
-     airbnb.listings.numberOfBedrooms as numberOfBedrooms,
-     airbnb.listings.numberOfBeds as numberOfBeds ,
-     airbnb.listings.numberOfBaths as numberOfBaths
-     airbnb.listings.isSuperhost as isSuperhost,
-     airbnb.listings.isGreatLocation as isGreatLocation ,
-     airbnb.listings.isSparklingClean as isSparklingClean 
-     airbnb.listings.isGreatCheckIn as isGreatCheckIn,
-     airbnb.listings.isSelfCheckIn as isSelfCheckIn,
-     airbnb.listings.description as description
-     airbnb.listing_items.item_id,
-     airbnb.listings.* 
-     FROM listings JOIN listing_items ON 
-     listings.listing_id = listing_items.listing_id 
-     WHERE listings.listing_id = 9000000;`, cb);
-};
+//const connection = require('./index.js');
+const config = require('./dbconfig.js');
 
+const { Client } = require('pg');
+const client = new Client(config);
+client.connect();
 
-// const getListings = function (cb) {
-//   connection.query(`select 
-//   airbnb.listings.listing_id as listing_id,
-//   airbnb.listings.city as city,
-//   airbnb.listings.title as title,
-//   airbnb.listings.hostImage as hostImage,
-//   airbnb.listings.roomInfo as roomInfo,
-//   airbnb.listings.numberOfGuests as numberOfGuests,
-//   airbnb.listings.numberOfBedrooms as numberOfBedrooms,
-//   airbnb.listings.numberOfBeds as numberOfBeds ,
-//   airbnb.listings.numberOfBaths as numberOfBaths
-//   airbnb.listings.isSuperhost as isSuperhost,
-//   airbnb.listings.isGreatLocation as isGreatLocation ,
-//   airbnb.listings.isSparklingClean as isSparklingClean 
-//   airbnb.listings.isGreatCheckIn as isGreatCheckIn,
-//   airbnb.listings.isSelfCheckIn as isSelfCheckIn,
-//   airbnb.listings.description as description`, cb);
+// const getListingItem = function (item, cb) {
+// "SELECT * FROM airbnb.listings WHERE listing_id=${1};"
+// "SELECT listing_id, item_name, itemgroup_name FROM (airbnb.listing_items JOIN airbnb.items ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${1};";
+// "SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${1};"
+//   connection.connect(`SELECT listing_id, item_name, itemgroup_name 
+//    FROM 
+//    (airbnb.listing_items JOIN airbnb.items ON listing_items.item_id = items.item_id)
+//    JOIN 
+//    airbnb.itemgroups 
+//    ON 
+//    itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${1}`, (err, result) => {
+//      if (err) {
+//        res.status(500);
+//        res.send(err);
+//      } else {
+//       res.status(200);
+//       res.send(result);
+//      }
+//    });
 // };
 
 
-// const getlistingsleepings = function (cb) {
-//   connection.query (`select
-//   airbnb.listing_sleepings.room_type as room_type,
-//   airbnb.listing_sleepings.room_beds as room_beds, 
-//   `, cb);
+  // pool.query(`SELECT listing_id, item_name, itemgroup_name 
+  // FROM 
+  // (airbnb.listing_items JOIN airbnb.items ON listing_items.item_id = items.item_id)
+  // JOIN 
+  // airbnb.itemgroups 
+  // ON 
+  // itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${1}`)
+  // .then((res) => console.log(res.row[0].name))
+  // .catch(err => console.err('Error executing query', err.stack))
+  
+
+
+// module.export = {
+//   getListingItem,
 // };
 
+const getListing = function (cb) {
+  client.query('SELECT * FROM airbnb.listings WHERE listing_id=$1', [33] , cb);
+}
 
-// const getItemGroups = function (cb) {
-//   connection.query (`select 
-//   airbnb.itemgroups.itemgroup_id as itemgroup_id,
-//   airbnb.itemgroups.temgroup_name,
-//   `, cb);
-// };
+const getTime = function(cb) {
+  //cb(null, 8);
+  client.query('SELECT NOW()', cb);
+}
 
-// const getListingitems = function (cb) {
-//   connection.query (`
-//   `, cb);
-// };
-
-
-module.export = {
-  getListingItem,
-  getListings,
-  getlistingsleepings,
-  getItemGroups,
-  getListingitems,
+module.exports = {
+  getTime,
+  getListing
 };
