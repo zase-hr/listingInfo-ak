@@ -6,7 +6,7 @@ const config = require('./dbconfig.js');
 const pool = new Pool(config);
 pool.connect();
 
-const getListing = async function (targetId, cb) {
+const getListing = function (targetId, cb) {
   pool.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId}`, (err1, data1) => {
     if (err1) {
       cb(err1);
@@ -32,6 +32,26 @@ const getListing = async function (targetId, cb) {
       });
     }
   });
+};
+
+
+const getListingAsync = async function (targetId, cb) {
+  try {
+    const data1 = await pool.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId}`);
+    const data2 = await pool.query(`SELECT listing_id, item_name, itemgroup_name
+                                    FROM (airbnb.listing_items JOIN airbnb.items
+                                    ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups
+                                    ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${targetId}`);
+    const data3 = await pool.query(`SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${targetId}`);
+    
+    const allData = Object.assign({}, data1.rows[0]);
+    allData.items                = data2.rows.length >= 1 ? data2.rows[0] : {};
+    allData.sleepingArrangements = data3.rows.length >= 1 ? data3.rows[0] : {};
+    cb(undefined, allData);
+  } catch (e) {
+    console.log(e);
+    cb(e);
+  }
 };
 
 // const getListing = function (targetId, cb) {
@@ -65,6 +85,7 @@ const getTime = async function (cb) {
 module.exports = {
   getTime,
   getListing,
+  getListingAsync,
   deleteListing,
   insertListing,
   updateListing,
