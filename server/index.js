@@ -38,7 +38,7 @@ app.get('/testtime', (req, res) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 app.get('/listing/:id', (req, res) => {
-  db.getListing(req.params.id, (err, data) => {
+  db.getListingAsyncParallel(req.params.id, (err, data) => {
     console.log(req.params.id);
     if (err) {
       res.status(500);

@@ -107,65 +107,32 @@ Get the information for a single listing
 ##### Sample output structure:
 ```
 {
-    "_id": integer, 
-    "city": string, 
-    "title": string, 
-    "hostImage": "URL", 
-    "roomInfo": string, 
-    "numberOfGuests": integer, 
-    "numberOfBedrooms": integer,
-    "numberOfBeds": integer,
-    "numberOfBaths": integer, 
-    "isSuperhost": boolean,
-    "isGreatLocation": boolean, 
-    "isSparklingClean": boolean, 
-    "isGreatCheckIn": boolean, 
-    "isSelfCheckIn": boolean, 
-    "description": string, 
-    "amenities": object,
-    "dining": object, 
-    "bedAndBath": object, 
-    "sleepingArrangements": object
+  "listing_id": 4,
+  "city": "Rosinaville",
+  "title": "Handmade Steel Pizza",
+  "hostimage": "https://s3.amazonaws.com/uifaces/faces/twitter/SlaapMe/128.jpg",
+  "roominfo": "Multi-layered context-sensitive matrix",
+  "numberofguests": 11,
+  "numberofbedrooms": 2,
+  "numberofbeds": 4,
+  "numberofbaths": 5,
+  "issuperhost": false,
+  "isgreatlocation": true,
+  "issparklingclean": false,
+  "isgreatcheckin": false,
+  "isselfcheckin": false,
+  "description": "omnis est enim ab mollitia",
+  "items": {
+    "listing_id": 4,
+    "item_name": "Pillow",
+    "itemgroup_name": "Bed And Bath"
+  },
+  "sleepingArrangements": {
+    "listing_id": 4,
+    "room_type": "Space 4",
+    "room_beds": "Twin bed"
+  }
 }
-```
-
-## Read All (Read)
- Get detailed information for all listings
-
- &nbsp; | Description
----|---
-**HTTP Method** | `GET`
- **URL** | `/listings`
- **Input** | *N/A*
- **Output**| information of all listings (array of JSON objects) 
-##### Sample output structure:
-```
- [
-    {
-        "_id": integer, 
-        "city": string, 
-        "title": string, 
-        "hostImage": "URL", 
-        "roomInfo": string, 
-        "numberOfGuests": integer, 
-        "numberOfBedrooms": integer,
-        "numberOfBeds": integer,
-        "numberOfBaths": integer, 
-        "isSuperhost": boolean,
-        "isGreatLocation": boolean, 
-        "isSparklingClean": boolean, 
-        "isGreatCheckIn": boolean, 
-        "isSelfCheckIn": boolean, 
-        "description": string, 
-        "amenities": object,
-        "dining": object, 
-        "bedAndBath": object, 
-        "sleepingArrangements": object
-    }, {
-        "_id": integer, 
-        ...
-    }
-]
 ```
 
 
@@ -184,11 +151,23 @@ Update the properties of a listing.
 ##### Sample input structure:
 As an example, here we can only update 3 properties of the existing listing:
 ```
-  {
-    "city": string, 
-    "numberOfBedrooms": integer,
-    "isGreatCheckIn": boolean, 
-  }
+ {
+  "command": "UPDATE",
+  "rowCount": 1,
+  "oid": null,
+  "rows": [],
+  "fields": [],
+  "_parsers": [],
+  "_types": {
+    "_types": {
+      "arrayParser": {}
+    },
+    "text": {},
+    "binary": {}
+  },
+  "RowCtor": null,
+  "rowAsArray": false
+}
 ```
 
 
@@ -202,3 +181,23 @@ Delete a room from the listing information
  **URL** | `/listing/:id`
  **Input** | ID of the listing to be deleted
  **Output**| boolean (successfully deleted)
+  ```
+{
+  "command": "DELETE",
+  "rowCount": 1,
+  "oid": null,
+  "rows": [],
+  "fields": [],
+  "_parsers": [],
+  "_types": {
+    "_types": {
+      "arrayParser": {}
+    },
+    "text": {},
+    "binary": {}
+  },
+  "RowCtor": null,
+  "rowAsArray": false
+}
+
+```
