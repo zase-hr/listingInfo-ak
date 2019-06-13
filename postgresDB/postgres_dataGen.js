@@ -37,7 +37,7 @@ const listingsGen = async () => {
       console.timeLog('process', `creating listing ${i}`);
     }
     const listingObject = {
-      //listing_id: i + 1, will be auto incremented
+      //listing_id: i + 1, // UPDATE: it will be auto incremented using SERIAL on the column
       city: faker.address.city(),
       title: faker.commerce.productName(),
       hostImage: faker.image.avatar(),
