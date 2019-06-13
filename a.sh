@@ -24,12 +24,32 @@ time psql -d postgres -c "DELETE FROM airbnb.listings WHERE listing_id=9500000;"
 time psql -d postgres -c "DELETE FROM airbnb.listings IN (SELECT FROM airbnb.listing_sleepings WHERE listing_id=9500000;"
 
 time psql -d postgres -c "DELETE FROM airbnb.listings USING airbnb.listing_sleepings WHERE airbnb.listings.listing_id = airbnb.listing_sleepings.listing_id;"
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
- 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+time psql -d postgres -c "INSERT INTO airbnb.listings 
+(
+	city,
+	title,
+	
+	numberOfGuests,
+	numberOfBedrooms,
+	numberOfBeds,numberOfBaths,
+	isSuperhost,
+	isGreatLocation,
+    isSparklingClean,
+    isGreatCheckIn) VALUES 
+('Milan',
+	'Spacious traditional house'
+	,3,3,2,true,true,true,false);"
 
-time psql -d postgres -c "INSERT INTO airbnb.listings (city, title,numberOfGuests,isGreatLocation,description) VALUES ({city},{title},{numberOfGuests},{isGreatLocation},{description})"
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-time psql -d postgres -c "UPDATE airbnb.listings SET city= ${city}, title= ${title}' WHERE id = ${listing_id}"
+
+
+
+
+
+
+
+

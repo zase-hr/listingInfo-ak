@@ -1,7 +1,7 @@
 module.exports = {
   host: 'localhost',
-  user: 'db_admin',
-  password: 'golabi',
+  user: 'admin_db',
+  password: 'golabi23',
   database: 'postgres',
   max: 20,
   idleTimeoutMillis: 30000,

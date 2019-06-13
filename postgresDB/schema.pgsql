@@ -29,7 +29,7 @@ CREATE TABLE airbnb.listing_sleepings (
     room_type VARCHAR(50),
     room_beds VARCHAR(50)
 );
-CREATE INDEX listing_sleepings_index ON listing_sleepings (listing_id);
+CREATE INDEX listing_sleepings_index ON airbnb.listing_sleepings (listing_id);
 
 
 -- order matters here as we have foreign keys --
@@ -51,7 +51,7 @@ CREATE TABLE airbnb.listing_items (
     listing_id INT NOT NULL REFERENCES airbnb.listings(listing_id) on delete cascade,
     item_id INT NOT NULL REFERENCES airbnb.items(item_id)
 );
-CREATE INDEX listing_items_index ON listing_items (listing_id);
+CREATE INDEX listing_items_index ON airbnb.listing_items (listing_id);
 
 -- https://stackoverflow.com/questions/19145761/postgres-for-loop
 

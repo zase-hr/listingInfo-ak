@@ -7,9 +7,9 @@ const fs = require('fs');
 const csvWriter = require('csv-write-stream');
 const faker = require('faker');
 
-const N = 10 * 1000 * 1000;
-const LOG_STEP = 100 * 1000;
-const DRAIN_LOG_STEP = 10 * 1000;
+const N = 10 * 1000;// * 1000;
+const LOG_STEP = 1 * 1000;
+const DRAIN_LOG_STEP = 1 * 1000;
 const TOTAL_ITEMS_DEFINED = 37;
 
 let drainCount = 0;

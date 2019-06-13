@@ -1,59 +1,62 @@
+/* eslint-disable func-names */
 
-//const connection = require('./index.js');
+const { Pool } = require('pg');
 const config = require('./dbconfig.js');
 
-const { Client } = require('pg');
-const client = new Client(config);
-client.connect();
+const pool = new Pool(config);
+pool.connect();
 
-// const getListingItem = function (item, cb) {
-// "SELECT * FROM airbnb.listings WHERE listing_id=${1};"
-// "SELECT listing_id, item_name, itemgroup_name FROM (airbnb.listing_items JOIN airbnb.items ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${1};";
-// "SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${1};"
-//   connection.connect(`SELECT listing_id, item_name, itemgroup_name 
-//    FROM 
-//    (airbnb.listing_items JOIN airbnb.items ON listing_items.item_id = items.item_id)
-//    JOIN 
-//    airbnb.itemgroups 
-//    ON 
-//    itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${1}`, (err, result) => {
-//      if (err) {
-//        res.status(500);
-//        res.send(err);
-//      } else {
-//       res.status(200);
-//       res.send(result);
-//      }
-//    });
+const getListing = async function (targetId, res) {
+  pool.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId}`, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      pool.query(`SELECT listing_id, item_name, itemgroup_name
+                    FROM (airbnb.listing_items JOIN airbnb.items
+                    ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups
+                    ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${targetId}`, (err, data) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            pool.query(`SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${targetId}`, (err, data) => {
+              if (err) {
+                res.status(500).send(err);
+              } else {
+                res.status(200);
+                res.send(data.rows);
+              }
+            });
+          }
+        });
+      }
+  });
+};
+
+// const getListing = function (targetId, cb) {
+//   client.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId};`, cb);
 // };
 
 
-  // pool.query(`SELECT listing_id, item_name, itemgroup_name 
-  // FROM 
-  // (airbnb.listing_items JOIN airbnb.items ON listing_items.item_id = items.item_id)
-  // JOIN 
-  // airbnb.itemgroups 
-  // ON 
-  // itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${1}`)
-  // .then((res) => console.log(res.row[0].name))
-  // .catch(err => console.err('Error executing query', err.stack))
-  
+const deleteListing = async function (targetId, cb) {
+  pool.query(`DELETE FROM airbnb.listings WHERE listing_id =${targetId};`, cb);
+};
 
+const insertListing = function (city, title, numberOfGuests, isGreatLocation, description, cb) {
+  pool.query(`INSERT INTO airbnb.listings (city, title,numberOfGuests,isGreatLocation,description) VALUES (${city},${title},${numberOfGuests},${isGreatLocation},${description})`, cb);
+};
 
-// module.export = {
-//   getListingItem,
-// };
+const updateListing = function (city, title, cb) {
+  pool.query(`UPDATE airbnb.listings SET city= ${city} title= ${title} WHERE id = ${listing_id}`, cb);
+};
 
-const getListing = function (cb) {
-  client.query('SELECT * FROM airbnb.listings WHERE listing_id=$1', [33] , cb);
-}
-
-const getTime = function(cb) {
-  //cb(null, 8);
-  client.query('SELECT NOW()', cb);
-}
+const getTime = async function (cb) {
+  pool.query('SELECT NOW()', cb);
+};
 
 module.exports = {
   getTime,
-  getListing
+  getListing,
+  deleteListing,
+  insertListing,
+  updateListing,
 };
