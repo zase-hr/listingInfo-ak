@@ -41,8 +41,23 @@ const deleteListing = async function (targetId, cb) {
   pool.query(`DELETE FROM airbnb.listings WHERE listing_id =${targetId};`, cb);
 };
 
-const insertListing = function (city, title, numberOfGuests, isGreatLocation, description, cb) {
-  pool.query(`INSERT INTO airbnb.listings (city, title,numberOfGuests,isGreatLocation,description) VALUES (${city},${title},${numberOfGuests},${isGreatLocation},${description})`, cb);
+const insertListing = function (body, cb) {
+  const {
+    city,
+    title,
+    numberOfGuests,
+    isGreatLocation,
+    description,
+  } = body;
+  console.log({
+    city,
+    title,
+    numberOfGuests,
+    isGreatLocation,
+    description,
+  });
+  console.log(`INSERT INTO airbnb.listings (city,title,numberOfGuests,isGreatLocation,description) VALUES ("${city}","${title}",${numberOfGuests},${isGreatLocation},"${description}")`);
+  pool.query(`INSERT INTO airbnb.listings (city,title,numberOfGuests,isGreatLocation,description) VALUES ("${city}","${title}",${numberOfGuests},${isGreatLocation},"${description}")`, cb);
 };
 
 const updateListing = function (city, title, cb) {

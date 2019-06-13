@@ -6,15 +6,15 @@ CREATE SCHEMA airbnb;
 /* ~~~~~~~~~~~~~~~~~~~ review_author ~~~~~~~~~~~~~~~~~~~~ */
 
 CREATE TABLE airbnb.listings (
-    listing_id INT NOT NULL,
+    listing_id SERIAL,
     city       VARCHAR(50) NOT NULL,
     title      VARCHAR(255) NOT NULL,
     hostImage  VARCHAR(255),
-    roomInfo   VARCHAR(255) NOT NULL,
+    roomInfo   VARCHAR(255),
     numberOfGuests      INT NOT NULL,
-    numberOfBedrooms    INT NOT NULL,
-    numberOfBeds        INT NOT NULL,
-    numberOfBaths       INT NOT NULL,
+    numberOfBedrooms    INT NOT NULL DEFAULT 1,
+    numberOfBeds        INT NOT NULL DEFAULT 1,
+    numberOfBaths       INT NOT NULL DEFAULT 1,
     isSuperhost         BOOLEAN NOT NULL DEFAULT FALSE,
     isGreatLocation     BOOLEAN NOT NULL DEFAULT FALSE,
     isSparklingClean    BOOLEAN NOT NULL DEFAULT FALSE,
@@ -82,6 +82,6 @@ VALUES
     
 -- select item_name, itemgroup_name from airbnb.items join airbnb.itemgroups on airbnb.items.itemgroup_id = airbnb.itemgroups.itemgroup_id;
 
-\COPY airbnb.listings(listing_id,city,title,hostImage,roomInfo,numberOfGuests,numberOfBedrooms,numberOfBeds,numberOfBaths,isSuperhost,isGreatLocation,isSparklingClean,isGreatCheckIn,isSelfCheckIn,description) FROM 'listings.csv' CSV HEADER;
+\COPY airbnb.listings(city,title,hostImage,roomInfo,numberOfGuests,numberOfBedrooms,numberOfBeds,numberOfBaths,isSuperhost,isGreatLocation,isSparklingClean,isGreatCheckIn,isSelfCheckIn,description) FROM 'listings.csv' CSV HEADER;
 \COPY airbnb.listing_items(listing_id,item_id) FROM 'listingitems.csv' CSV HEADER;
 \COPY airbnb.listing_sleepings(listing_id,room_type,room_beds) FROM 'sleeping.csv' CSV HEADER;
