@@ -81,7 +81,7 @@ app.post('/listing', (req, res) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UPDATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 app.put('/listing/:id', (req, res) => {
-  db.updateListing(req.params.id, (err, data) => {
+  db.updateListing(req.params.id, req.body, (err, data) => {
     if (err) {
       res.status(500).send(err);
     } else {

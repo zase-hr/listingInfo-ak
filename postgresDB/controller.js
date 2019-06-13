@@ -97,8 +97,13 @@ const insertListing = function (body, cb) {
   pool.query(`INSERT INTO airbnb.listings (city,title,numberOfGuests,isGreatLocation,description) VALUES ("${city}","${title}",${numberOfGuests},${isGreatLocation},"${description}")`, cb);
 };
 
-const updateListing = function (city, title, cb) {
-  pool.query(`UPDATE airbnb.listings SET city= ${city} title= ${title} WHERE id = ${listing_id}`, cb);
+const updateListing = function (id, body, cb) {
+  const {
+    city,
+    title,
+    description,
+  } = body;
+  pool.query(`UPDATE airbnb.listings SET city='${city}', title='${title}', description='${description}' WHERE listing_id = ${id}`, cb);
 };
 
 const getTime = async function (cb) {
