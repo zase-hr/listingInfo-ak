@@ -1,2 +1,0 @@
-id;city;title;hostImage;roomInfo;numberOfGuests;numberOfBedrooms;numberOfBeds;numberOfBaths;isSuperhost;isGreatLocation;isSparklingClean;isGreatCheckIn;isSelfCheckIn;description;amenities_basic;amenities_dining;amenities_bedAndBath;sleepingArrangements
-11;'paris';'good place';'http://image.com/image;good room';5;4;3;2;true;false;true;false;true;'very good place to be';['wifi'];['kitchen'];['pillow blankets'];{'bedroom1':'2 beds'}

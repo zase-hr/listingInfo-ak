@@ -1,6 +1,5 @@
+.DS_Store
 node_modules
 client/dist/bundle.js
-cassandra/*.csv
-postgres/listingitems.csv
-postgres/listings.csv
-postgres/sleeping.csv
+cassandraDB/*.csv
+postgresDB/*.csv
