@@ -3,3 +3,6 @@ node_modules
 client/dist/bundle.js
 cassandraDB/*.csv
 postgresDB/*.csv
+
+newrelic.js
+newrelic_agent.log
