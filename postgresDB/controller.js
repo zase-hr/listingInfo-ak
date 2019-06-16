@@ -1,76 +1,121 @@
-const connection = require('./index.js');
+/* eslint-disable func-names */
 
-// eslint-disable-next-line func-names
-const getListingItem = function (cb) {
-  connection.query(`SELECT 
-     airbnb.listings.listing_id as listing_id,
-     airbnb.listings.city as city,
-     airbnb.listings.title as title,
-     airbnb.listings.hostImage as hostImage,
-     airbnb.listings.roomInfo as roomInfo,
-     airbnb.listings.numberOfGuests as numberOfGuests,
-     airbnb.listings.numberOfBedrooms as numberOfBedrooms,
-     airbnb.listings.numberOfBeds as numberOfBeds ,
-     airbnb.listings.numberOfBaths as numberOfBaths
-     airbnb.listings.isSuperhost as isSuperhost,
-     airbnb.listings.isGreatLocation as isGreatLocation ,
-     airbnb.listings.isSparklingClean as isSparklingClean 
-     airbnb.listings.isGreatCheckIn as isGreatCheckIn,
-     airbnb.listings.isSelfCheckIn as isSelfCheckIn,
-     airbnb.listings.description as description
-     airbnb.listing_items.item_id,
-     airbnb.listings.* 
-     FROM listings JOIN listing_items ON 
-     listings.listing_id = listing_items.listing_id 
-     WHERE listings.listing_id = 9000000;`, cb);
+const { Pool } = require('pg');
+const config = require('./dbconfig.js');
+
+const pool = new Pool(config);
+pool.connect();
+
+const getListing = function (targetId, cb) {
+  pool.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId}`, (err1, data1) => {
+    if (err1) {
+      cb(err1);
+    } else {
+      pool.query(`SELECT listing_id, item_name, itemgroup_name
+                    FROM (airbnb.listing_items JOIN airbnb.items
+                    ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups
+                    ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${targetId}`, (err2, data2) => {
+        if (err2) {
+          cb(err2);
+        } else {
+          pool.query(`SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${targetId}`, (err3, data3) => {
+            if (err3) {
+              cb(err3);
+            } else {
+              const allData = Object.assign({}, data1.rows[0]);
+              allData.items                = data2.rows.length >= 1 ? data2.rows[0] : {};
+              allData.sleepingArrangements = data3.rows.length >= 1 ? data3.rows[0] : {};
+              cb(undefined, allData);
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
+const getListingAsync = async function (targetId, cb) {
+  try {
+    const data1 = await pool.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId}`);
+    const data2 = await pool.query(`SELECT listing_id, item_name, itemgroup_name
+                                    FROM (airbnb.listing_items JOIN airbnb.items
+                                    ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups
+                                    ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${targetId}`);
+    const data3 = await pool.query(`SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${targetId}`);
+    
+    const allData = Object.assign({}, data1.rows[0]);
+    allData.items                = data2.rows.length >= 1 ? data2.rows[0] : {};
+    allData.sleepingArrangements = data3.rows.length >= 1 ? data3.rows[0] : {};
+    cb(undefined, allData);
+  } catch (e) {
+    console.log(e);
+    cb(e);
+  }
+};
 
-// const getListings = function (cb) {
-//   connection.query(`select 
-//   airbnb.listings.listing_id as listing_id,
-//   airbnb.listings.city as city,
-//   airbnb.listings.title as title,
-//   airbnb.listings.hostImage as hostImage,
-//   airbnb.listings.roomInfo as roomInfo,
-//   airbnb.listings.numberOfGuests as numberOfGuests,
-//   airbnb.listings.numberOfBedrooms as numberOfBedrooms,
-//   airbnb.listings.numberOfBeds as numberOfBeds ,
-//   airbnb.listings.numberOfBaths as numberOfBaths
-//   airbnb.listings.isSuperhost as isSuperhost,
-//   airbnb.listings.isGreatLocation as isGreatLocation ,
-//   airbnb.listings.isSparklingClean as isSparklingClean 
-//   airbnb.listings.isGreatCheckIn as isGreatCheckIn,
-//   airbnb.listings.isSelfCheckIn as isSelfCheckIn,
-//   airbnb.listings.description as description`, cb);
+const getListingAsyncParallel = async function (targetId, cb) {
+  try {
+    const query1 = pool.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId}`);
+    const query2 = pool.query(`SELECT listing_id, item_name, itemgroup_name
+                                    FROM (airbnb.listing_items JOIN airbnb.items
+                                    ON listing_items.item_id = items.item_id) JOIN airbnb.itemgroups
+                                    ON itemgroups.itemgroup_id = items.itemgroup_id  WHERE listing_items.listing_id = ${targetId}`);
+    const query3 = pool.query(`SELECT * FROM airbnb.listing_sleepings WHERE listing_id=${targetId}`);
+
+    const data1 = await query1;
+    const data2 = await query2;
+    const data3 = await query3;
+
+
+    const allData = Object.assign({}, data1.rows[0]);
+    allData.items                = data2.rows.length >= 1 ? data2.rows[0] : {};
+    allData.sleepingArrangements = data3.rows.length >= 1 ? data3.rows[0] : {};
+    cb(undefined, allData);
+  } catch (e) {
+    console.log(e);
+    cb(e);
+  }
+};
+
+// const getListing = function (targetId, cb) {
+//   client.query(`SELECT * FROM airbnb.listings WHERE listing_id=${targetId};`, cb);
 // };
 
 
-// const getlistingsleepings = function (cb) {
-//   connection.query (`select
-//   airbnb.listing_sleepings.room_type as room_type,
-//   airbnb.listing_sleepings.room_beds as room_beds, 
-//   `, cb);
-// };
+const deleteListing = async function (targetId, cb) {
+  pool.query(`DELETE FROM airbnb.listings WHERE listing_id =${targetId};`, cb);
+};
 
+const insertListing = function (body, cb) {
+  const {
+    city,
+    title,
+    numberOfGuests,
+    isGreatLocation,
+    description,
+  } = body;
+  pool.query(`INSERT INTO airbnb.listings (city,title,numberOfGuests,isGreatLocation,description) VALUES ("${city}","${title}",${numberOfGuests},${isGreatLocation},"${description}")`, cb);
+};
 
-// const getItemGroups = function (cb) {
-//   connection.query (`select 
-//   airbnb.itemgroups.itemgroup_id as itemgroup_id,
-//   airbnb.itemgroups.temgroup_name,
-//   `, cb);
-// };
+const updateListing = function (id, body, cb) {
+  const {
+    city,
+    title,
+    description,
+  } = body;
+  pool.query(`UPDATE airbnb.listings SET city='${city}', title='${title}', description='${description}' WHERE listing_id = ${id}`, cb);
+};
 
-// const getListingitems = function (cb) {
-//   connection.query (`
-//   `, cb);
-// };
+const getTime = async function (cb) {
+  pool.query('SELECT NOW()', cb);
+};
 
-
-module.export = {
-  getListingItem,
-  getListings,
-  getlistingsleepings,
-  getItemGroups,
-  getListingitems,
+module.exports = {
+  getTime,
+  getListing,
+  getListingAsync,
+  getListingAsyncParallel,
+  deleteListing,
+  insertListing,
+  updateListing,
 };

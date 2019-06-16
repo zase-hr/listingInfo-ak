@@ -1,15 +1,11 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
-/* eslint-disable no-plusplus */
+
 const fs = require('fs');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const csvWriter = require('csv-write-stream');
 const faker = require('faker');
 
-const N = 10 * 1000 * 1000;
+const N = 10 * 1000 * 1000;// * 1000;
 const LOG_STEP = 100 * 1000;
-const DRAIN_LOG_STEP = 10 * 1000;
+const DRAIN_LOG_STEP = 100 * 1000;
 const TOTAL_ITEMS_DEFINED = 37;
 
 let drainCount = 0;
@@ -37,7 +33,7 @@ const listingsGen = async () => {
       console.timeLog('process', `creating listing ${i}`);
     }
     const listingObject = {
-      listing_id: i + 1,
+      //listing_id: i + 1, // UPDATE: it will be auto incremented using SERIAL on the column
       city: faker.address.city(),
       title: faker.commerce.productName(),
       hostImage: faker.image.avatar(),

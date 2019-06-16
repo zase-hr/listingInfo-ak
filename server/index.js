@@ -1,11 +1,15 @@
+/* eslint-disable no-console */
+// require('newrelic');
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 const bodyParser = require('body-parser');
-const cors = require('cors');
-const db = require('../database MongoDB/index.js');
 
-const port = 3002;
+const db = require('../postgresDB/controller.js');
+
+
+const port = process.env.PORT || 3002;
 
 app.use(cors());
 app.use(express.static(`${__dirname}/../client/dist`));
@@ -13,51 +17,78 @@ app.use(express.static(`${__dirname}/../client/dist`));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TEST~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-app.get('/listing/:id', (req, res) => {
-  db.getListingItem((err, data) => {
+app.get('/test1', (req, res) => {
+  res.status(200).send('hiiii');
+});
+
+app.get('/testtime', (req, res) => {
+  db.getTime((err, data) => {
     if (err) {
       res.status(500);
       res.send(err);
     } else {
       res.status(200);
-      res.send(data[0]);
+      res.send(data);
     }
   });
 });
 
-// app.put('/listing/:id', (req, res) => {
-//   db.listings.findByIdAndUpdate()({ id: req.params.id }, { id: req.params.id }).exec((err, docs) => {
-//     if (err) {
-//       res.status(500).send();
-//     } else {
-//       console.log('hi, I update one listing information object');
-//       res.status(200).send(docs);
-//     }
-//   });
-// });
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// app.post('/listing', (req, res) => {
-//   db.listings.create({ id: req.body.id }).exec((err, docs) => {
-//     if (err) {
-//       res.status(500).send();
-//     } else {
-//       console.log('hi, I get one listing information');
-//       res.status(200).send(docs);
-//     }
-//   });
-// });
+app.get('/listing/:id', (req, res) => {
+  db.getListingAsyncParallel(req.params.id, (err, data) => {
+    console.log(req.params.id);
+    if (err) {
+      res.status(500);
+      res.send(err);
+    } else {
+      res.status(200);
+      res.send(data);
+    }
+  });
+});
 
-// app.delete('/listing/:id', (req, res) => {
-//   db.listings.findByIdAndRemove({ id: req.params.id }).exec((err, docs) => {
-//     if (err) {
-//       res.status(500).send();
-//     } else {
-//       console.log('hi, I remove one listing information');
-//       res.status(200).send(docs);
-//     }
-//   });
-// });
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.delete('/listing/:id', (req, res) => {
+  db.deleteListing(req.params.id, (err, data) => {
+    if (err) {
+      res.status(500);
+      res.send(err);
+    } else {
+      res.status(200);
+      res.send(data);
+    }
+  });
+});
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ POST ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.post('/listing', (req, res) => {
+  db.insertListing(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      console.log('hi, I add one listing information');
+      res.status(200).send(data);
+    }
+  });
+});
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UPDATE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.put('/listing/:id', (req, res) => {
+  db.updateListing(req.params.id, req.body, (err, data) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(data);
+    }
+  });
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
