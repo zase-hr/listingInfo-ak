@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// require('newrelic');
+require('newrelic');
 const express = require('express');
 const cors = require('cors');
 
@@ -39,7 +39,7 @@ app.get('/testtime', (req, res) => {
 
 app.get('/listing/:id', (req, res) => {
   db.getListingAsyncParallel(req.params.id, (err, data) => {
-    console.log(req.params.id);
+    //console.log(req.params.id);
     if (err) {
       res.status(500);
       res.send(err);
@@ -72,7 +72,6 @@ app.post('/listing', (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      console.log('hi, I add one listing information');
       res.status(200).send(data);
     }
   });

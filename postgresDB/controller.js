@@ -94,7 +94,7 @@ const insertListing = function (body, cb) {
     isGreatLocation,
     description,
   } = body;
-  pool.query(`INSERT INTO airbnb.listings (city,title,numberOfGuests,isGreatLocation,description) VALUES ("${city}","${title}",${numberOfGuests},${isGreatLocation},"${description}")`, cb);
+  pool.query(`INSERT INTO airbnb.listings (city,title,numberOfGuests,isGreatLocation,description) VALUES ('${city}','${title}',${numberOfGuests},${isGreatLocation},'${description}')`, cb);
 };
 
 const updateListing = function (id, body, cb) {

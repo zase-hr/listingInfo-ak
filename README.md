@@ -72,25 +72,21 @@ Add a new listing to the listings information
 ##### Sample input structure:
 ```
 {
-    "_id": integer, 
-    "city": string, 
-    "title": string, 
-    "hostImage": "URL", 
-    "roomInfo": string, 
-    "numberOfGuests": integer, 
-    "numberOfBedrooms": integer,
-    "numberOfBeds": integer,
-    "numberOfBaths": integer, 
-    "isSuperhost": boolean,
-    "isGreatLocation": boolean, 
-    "isSparklingClean": boolean, 
-    "isGreatCheckIn": boolean, 
-    "isSelfCheckIn": boolean, 
-    "description": string, 
-    "amenities": object,
-    "dining": object, 
-    "bedAndBath": object, 
-    "sleepingArrangements": object
+  "command": "INSERT",
+  "rowCount": 1,
+  "oid": 0,
+  "rows": [],
+  "fields": [],
+  "_parsers": [],
+  "_types": {
+    "_types": {
+      "arrayParser": {}
+    },
+    "text": {},
+    "binary": {}
+  },
+  "RowCtor": null,
+  "rowAsArray": false
 }
 ```
 
