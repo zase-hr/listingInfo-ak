@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "react-dev": "webpack -d --watch",
+    "react-build": "webpack -d",
     "start": "nodemon server/index.js",
     "test": "jest",
     "seed": "node database/mockData.js"
